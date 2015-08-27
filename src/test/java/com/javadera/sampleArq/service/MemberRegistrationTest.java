@@ -45,8 +45,10 @@ public class MemberRegistrationTest {
                 .addClasses(Member.class, MemberRegistration.class, Resources.class)
                 .addAsResource("META-INF/test-persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-                // Deploy our test datasource
-                .addAsWebInfResource("test-ds.xml");
+                // Deploy h2 test datasource
+                .addAsWebInfResource("test-h2-ds.xml");
+                // Deploy PostgreSQL test datasource
+//              .addAsWebInfResource("test-ds.xml");
     }
 
     @Inject
