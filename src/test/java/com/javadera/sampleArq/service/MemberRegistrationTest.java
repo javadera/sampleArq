@@ -16,6 +16,7 @@
  */
 package com.javadera.sampleArq.service;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.util.logging.Logger;
@@ -28,6 +29,8 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -52,8 +55,8 @@ public class MemberRegistrationTest {
     @Inject
     Logger log;
 
-    @Test
-    public void testRegister() throws Exception {
+    @Before
+    public void before() throws Exception {
         Member newMember = new Member();
         newMember.setName("Jane Doe");
         newMember.setEmail("jane@mailinator.com");
@@ -63,32 +66,49 @@ public class MemberRegistrationTest {
         log.info(newMember.getName() + " was persisted with id " + newMember.getId());
     }
 
+    @After
+    public void after() throws Exception {
+    	Member mem = memberRegistration.selectByName("Jane Doe");
+    	memberRegistration.delete(mem);
+    }
+
+//    @Test
+//    public void testRegister() throws Exception {
+//        Member newMember = new Member();
+//        newMember.setName("Jane Doe");
+//        newMember.setEmail("jane@mailinator.com");
+//        newMember.setPhoneNumber("2125551234");
+//        memberRegistration.register(newMember);
+//        assertNotNull(newMember.getId());
+//        log.info(newMember.getName() + " was persisted with id " + newMember.getId());
+//    }
+
     @Test
     public void testSelectId() throws Exception {
-    	Member mem = memberRegistration.select(1L);
-    	assertEquals("1", mem.getId().toString());
+    	Member m = memberRegistration.selectByName("Jane Doe");
+    	Member mem = memberRegistration.select(m.getId());
+    	assertEquals(m.getId(), mem.getId());
         log.info(mem.getName() + " was selected with id " + mem.getId());
     }
 
     @Test
     public void testSelectName() throws Exception {
-    	Member mem = memberRegistration.select(1L);
-    	assertEquals("Jane Doe", mem.getName());
-        log.info(mem.getName() + " was selected");
+    	Member mem = memberRegistration.selectByName("Jane Doe");
+    	assertThat(mem.getName(), is("Jane Doe") );
+        log.info(mem.getName() + " was selected with id " + mem.getId());
     }
 
     @Test
     public void testSelectEmail() throws Exception {
-    	Member mem = memberRegistration.select(1L);
-    	assertEquals("jane@mailinator.com", mem.getEmail());
+    	Member mem = memberRegistration.selectByName("Jane Doe");
+    	assertThat(mem.getEmail(), is("jane@mailinator.com") );
         log.info(mem.getEmail() + " was selected with id " + mem.getId());
     }
 
     @Test
     public void testSelectPhoneNum() throws Exception {
-    	Member mem = memberRegistration.select(1L);
-    	assertEquals("2125551234", mem.getPhoneNumber());
-        log.info(mem.getPhoneNumber() + " was selected");
+    	Member mem = memberRegistration.selectByName("Jane Doe");
+    	assertThat(mem.getPhoneNumber(), is("2125551234") );
+        log.info(mem.getPhoneNumber() + " was selected with id " + mem.getId());
     }
-
 }

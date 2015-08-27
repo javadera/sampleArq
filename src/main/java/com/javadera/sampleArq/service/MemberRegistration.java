@@ -22,6 +22,7 @@ import javax.ejb.Stateless;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import com.javadera.sampleArq.model.Member;
 
@@ -47,5 +48,17 @@ public class MemberRegistration {
     public Member select(long id) throws Exception {
         log.info("SelectByID " + id);
         return em.find(Member.class, id);
+    }
+
+    public Member selectByName(String name) throws Exception {
+    	Query query = em.createNamedQuery("Member.findByName");
+    	query.setParameter("name", name);
+    	return (Member)query.getSingleResult();
+    }
+
+    public void delete(Member mem) throws Exception {
+    	Member target = em.find(Member.class, mem.getId());
+    	em.remove(target);
+    	em.flush();
     }
 }
