@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.com/kawakamimanabu/sampleArq.svg?branch=master)](https://travis-ci.com/kawakamimanabu/sampleArq)
+
 # sampleArq
 Trying Arquillian with WildFly and Jacoco
 
